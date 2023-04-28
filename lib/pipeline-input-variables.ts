@@ -14,7 +14,7 @@ export const PipelineInputVariables = {
   ENABLE_CONTINUOUS_DEPLOYMENT: false,
   HEADER_BASED_TRAFFIC_CONFIG: true,
 
-  // ORIGIN variables
+  // site access logs bucket name
   LOG_BUCKET_NAME: "mysite-logs",
 };
 
