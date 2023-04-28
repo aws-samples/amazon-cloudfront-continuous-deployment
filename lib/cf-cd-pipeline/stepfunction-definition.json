@@ -1,0 +1,118 @@
+{
+  "Comment": "StateMachine to update Amazon CloudFront Distribution. Supports updating ContinuousDeploymentPolicyId and Promoting a Staging Configuration",
+  "StartAt": "UpdateTypeChoice",
+  "States": {
+    "UpdateTypeChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.StagingDistributionId",
+            "IsPresent": true
+          },
+          "Next": "Choice"
+        }
+      ],
+      "Default": "GetDistribution"
+    },
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.DeploymentPolicy.ContinuousDeploymentPolicyId",
+          "StringEquals": "",
+          "Next": "GetPrimaryDistribution-Latest"
+        }
+      ],
+      "Default": "GetContinuousDeploymentPolicyConfig"
+    },
+    "GetDistribution": {
+      "Type": "Task",
+      "Next": "GetStagingDistribution",
+      "Parameters": {
+        "Id.$": "$.Id"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:getDistribution",
+      "ResultPath": "$.PrimaryDistribution"
+    },
+    "GetContinuousDeploymentPolicyConfig": {
+      "Type": "Task",
+      "Next": "PolicyEnabledChoice",
+      "Parameters": {
+        "Id.$": "$.DeploymentPolicy.ContinuousDeploymentPolicyId"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:getContinuousDeploymentPolicyConfig",
+      "ResultPath": "$.DeploymentPolicyConfig",
+      "ResultSelector": {
+        "ContinuousDeploymentPolicyConfig.$": "$.ContinuousDeploymentPolicyConfig",
+        "Update": {
+          "Enabled": true
+        },
+        "ETag.$": "$.ETag"
+      }
+    },
+    "PolicyEnabledChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.DeploymentPolicyConfig.ContinuousDeploymentPolicyConfig.Enabled",
+          "BooleanEquals": false,
+          "Next": "UpdateContinuousDeploymentPolicy"
+        }
+      ],
+      "Default": "GetPrimaryDistribution-Latest"
+    },
+    "UpdateContinuousDeploymentPolicy": {
+      "Type": "Task",
+      "Parameters": {
+        "ContinuousDeploymentPolicyConfig.$": "States.JsonMerge($.DeploymentPolicyConfig.ContinuousDeploymentPolicyConfig, $.DeploymentPolicyConfig.Update, false)",
+        "Id.$": "$.DeploymentPolicy.ContinuousDeploymentPolicyId",
+        "IfMatch.$": "$.DeploymentPolicyConfig.ETag"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:updateContinuousDeploymentPolicy",
+      "Next": "GetPrimaryDistribution-Latest",
+      "ResultPath": null
+    },
+    "GetPrimaryDistribution-Latest": {
+      "Type": "Task",
+      "Next": "UpdateDistribution",
+      "Parameters": {
+        "Id.$": "$.Id"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:getDistribution",
+      "ResultPath": "$.PrimaryDistribution"
+    },
+    "UpdateDistribution": {
+      "Type": "Task",
+      "End": true,
+      "Parameters": {
+        "DistributionConfig.$": "States.JsonMerge($.PrimaryDistribution.Distribution.DistributionConfig, $.DeploymentPolicy, false)",
+        "Id.$": "$.Id",
+        "IfMatch.$": "$.PrimaryDistribution.ETag"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:updateDistribution"
+    },
+    "GetStagingDistribution": {
+      "Type": "Task",
+      "Next": "UpdateDistributionWithStagingConfig",
+      "Parameters": {
+        "Id.$": "$.StagingDistributionId"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:getDistribution",
+      "ResultPath": "$.StagingDistribution",
+      "ResultSelector": {
+        "ETag.$": "$.ETag"
+      }
+    },
+    "UpdateDistributionWithStagingConfig": {
+      "Type": "Task",
+      "Parameters": {
+        "Id.$": "$.Id",
+        "StagingDistributionId.$": "$.StagingDistributionId",
+        "IfMatch.$": "States.Format('{},{}', $.PrimaryDistribution.ETag, $.StagingDistribution.ETag)"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudfront:updateDistributionWithStagingConfig",
+      "End": true
+    }
+  }
+}
