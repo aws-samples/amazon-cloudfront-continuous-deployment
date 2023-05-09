@@ -79,9 +79,71 @@ Follow below instructions if you want to remove the Pipeline and stacks created 
 1. `cdk destroy <REPLACE-WITH-PIPELINE-NAME>` 
 
 
+## Pricing Calculations
+Cost for running this solution consists of Code Repository cost, CI/CD Pipeline cost, and Amazon CloudFront Distribution cost
+
+### Assumptions
+
+| Assumption | Parameters |
+| --- | --- | 
+| Region | us-east-1 |
+| AWS CodeCommit Repositories | 1 | 
+| Number of AWS CodePipeline pipelines per month | 4 |  
+| ***AWS CodeCommit Usage***  |  |
+| Number of Active AWS CodeCommit Users per month | 5 | 
+| ***Pipeline Usage***  |  | |
+| Number of Continuous deployments to Amazon CloudFront Distribution per month | 64 |
+| ***Amazon CloudFront Usage***  |  | |
+| CloudFront Data transfer out to internet per month | 100 GB |
+| CloudFront requests per month | 1,000,000  |
 
 
- ### Troubleshooting 
+| Total Cost	| $13.53 |
+| --- | --- |
+| AWS CodePipeline |	$4.00 |
+| AWS CodeCommit |	$0.00 |
+| Amazon CloudFront |	$9.50 |
+| StepFunctions |	$0.025 |
+
+### AWS Service wise break up of calculations
+
+| [AWS CodePipeline Pricing](https://aws.amazon.com/codepipeline/pricing/)	|	$4.00 |
+| --- | --- | 
+| Number of active CodePipelines |  4	| 
+| Cost per active CodePipeline per month | $1.00 |
+| ***Total Pipeline cost*** |		$4.00 |
+
+| [StepFunctions Pricing](https://aws.amazon.com/step-functions/pricing/)	|	$0.028 |
+| --- | --- |
+| Number of state transitions	|  1024	| 
+| Cost per 1000 state transition | $0.025 | 
+| ***Total Workflow cost*** |		$0.0256 |
+
+| [AWS CodeCommit Pricing](https://aws.amazon.com/codecommit/pricing/)	|	$0.00 |
+| --- | --- | 
+| Number of active users |  5	| 
+| Cost for First 5 active users | $0.00 |
+| ***Total CodeCommit cost*** |	$0.00 |
+
+| [Amazon CloudFront Pricing](https://aws.amazon.com/cloudfront/pricing/)	|	$9.50 |
+| --- | --- | 
+| Total for data transfer out to internet per month   | 100 GB |
+| Cost for data transfer out to internet for per GB  | 0.085 |
+| ***Total CloudFront data transfer out to internet*** |	$8.50 |
+| Total number of CloudFront requests per month | 1,000,000 |
+| Cost for 1,000,000 requests | $1.00 |
+| ***Total CloudFront requests cost*** |	$1.00 |
+
+
+
+## Troubleshooting
  1. If the pipeline fails during stack creation, then the stack has to be manually deleted before retrying the pipeline steps 
  2. set account via CDK_DEFAULT_ACCOUNT for agnostic or explicitly set account number if you see error 'Pipeline stack which uses cross-environment actions must have an explicitly set account'
 
+## Security
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## License
+
+This library is licensed under the MIT-0 License. See the LICENSE file.
