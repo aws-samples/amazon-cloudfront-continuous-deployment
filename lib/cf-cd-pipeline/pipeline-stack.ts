@@ -133,7 +133,7 @@ export class PipelineStack extends cdk.Stack {
   ): void {
 
     if (!props || !props.env) {
-      throw Error("Account and Region are required if continuous deployment is enabled. Please Check cf-cd-sample-app.ts")
+      throw Error("Account and Region are required if continuous deployment is enabled. Please uncomment or pass env in file cf-cd-sample-app.ts")
     }
 
     let stageDistribution = new StagingDistributionStage(
@@ -181,39 +181,7 @@ export class PipelineStack extends cdk.Stack {
       );
   }
 
-  removeContinousDeploymentPolicy(
-    pipeline: CodePipeline,
-    stepFunctionName: string,
-    props?: cdk.StackProps
-  ): void {
-    if (!props || !props.env) {
-      throw Error("Account and Region are required. Check if they are uncommented are passed in cf-cd-sample-app.ts")
-    }
-    let stageDistribution = new StagingDistributionStage(
-      this,
-      "StagingDistribution-Change",
-      props
-    );
-    pipeline.addStage(stageDistribution);
-
-    const updateDeploymentPolicyWave = pipeline.addWave(
-      "Remove-DeploymentPolicy"
-    );
-    let primaryDistributionId = Fn.importValue(
-      PipelineExportNames.PRIMARY_DISTRIBUTION_ID
-    );
-
-    // run update step to detach the continous policy id.
-    let updateStep = new UpdateDistributionPipelineStep(
-      primaryDistributionId,
-      stepFunctionName,
-      props.env
-    );
-
-    updateDeploymentPolicyWave.addPost(updateStep);
-  }
-
-  addAspect(construct: Construct): void {
+    addAspect(construct: Construct): void {
     Aspects.of(construct).add(
       new AwsSolutionsChecks({
         verbose: true,
