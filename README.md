@@ -81,7 +81,7 @@ Follow below instructions if you want to remove the Pipeline and stacks created 
 1. run the following command from repository root directory or delete the pipeline stack from CloudFormation console
     1. `cdk destroy` 
 
-#### Clean S3 Directory 
+#### Cleanup S3 Buckets 
 1. Remove S3 Origin bucket and Site logs bucket using S3 Console
 
 
