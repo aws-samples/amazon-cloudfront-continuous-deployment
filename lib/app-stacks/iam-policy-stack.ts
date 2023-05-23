@@ -25,7 +25,7 @@ export class IamPolicyStack extends cdk.NestedStack {
 
     // attach s3 policy
     if (input.continuousDeployment) {
-      let cd = input.continuousDeployment;
+      const cd = input.continuousDeployment;
 
       this.attachS3ReadPolicy(
         input.bucketName,
@@ -33,7 +33,7 @@ export class IamPolicyStack extends cdk.NestedStack {
         cd.stagingDistributionId
       );
 
-      let stepFunctionRole = Role.fromRoleArn(
+      const stepFunctionRole = Role.fromRoleArn(
         this,
         "step-function-role",
         cd.stepFunctionRoleArn
@@ -60,7 +60,7 @@ export class IamPolicyStack extends cdk.NestedStack {
     const bucketResource = `arn:aws:s3:::${bucketName}/*`;
     const primaryDistributionArn = `arn:aws:cloudfront::${this.account}:distribution/${primaryDistributionId}`;
 
-    let statements = [
+    const statements = [
       new PolicyStatement({
         actions: ["s3:GetObject"],
         principals: [new ServicePrincipal("cloudfront.amazonaws.com")],

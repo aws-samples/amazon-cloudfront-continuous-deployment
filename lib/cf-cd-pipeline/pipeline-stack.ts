@@ -37,14 +37,14 @@ export class PipelineStack extends cdk.Stack {
       crossAccountKeys: true,
     });
 
-    let stepFunctionStack = new StepFunctionStack(
+    const stepFunctionStack = new StepFunctionStack(
       this,
       "cf-promotion-pipeline-step-function",
       props
     );
 
     // Note: set continuous deployment to false for the first time to deploy the primary distribution
-    let continousDeployment =
+    const continousDeployment =
       PipelineInputVariables.ENABLE_CONTINUOUS_DEPLOYMENT;
 
     if (continousDeployment) {
@@ -66,7 +66,7 @@ export class PipelineStack extends cdk.Stack {
 
     pipeline.buildPipeline();
 
-    let artifactBucket = pipeline.pipeline.artifactBucket.node
+    const artifactBucket = pipeline.pipeline.artifactBucket.node
       .defaultChild as CfnBucket;
     artifactBucket.loggingConfiguration = {
       logFilePrefix: "artifact_access_log",
@@ -74,7 +74,7 @@ export class PipelineStack extends cdk.Stack {
     artifactBucket.versioningConfiguration = { status: "Enabled" };
 
     if (pipeline.pipeline.artifactBucket.encryptionKey) {
-      let key = pipeline.pipeline.artifactBucket.encryptionKey.node
+      const key = pipeline.pipeline.artifactBucket.encryptionKey.node
         .defaultChild as CfnKey;
       key.enableKeyRotation = true;
     }
@@ -110,13 +110,13 @@ export class PipelineStack extends cdk.Stack {
     props?: StageProps,
     stackProps?: cdk.StackProps
   ): void {
-    let primaryDistribution = new PrimaryDistributionStage(
+    const primaryDistribution = new PrimaryDistributionStage(
       this,
       "PrimaryDistribution-Change",
       stackProps
     );
 
-    let stage = pipeline.addStage(primaryDistribution);
+    const stage = pipeline.addStage(primaryDistribution);
 
     stage.addPost(
       new ShellStep("test distribution", {
@@ -141,7 +141,7 @@ export class PipelineStack extends cdk.Stack {
       );
     }
 
-    let stageDistribution = new StagingDistributionStage(
+    const stageDistribution = new StagingDistributionStage(
       this,
       "StagingDistribution-Change",
       props
@@ -151,19 +151,19 @@ export class PipelineStack extends cdk.Stack {
     const updateDeploymentPolicyWave = pipeline.addWave(
       "Update-DeploymentPolicy"
     );
-    let primaryDistributionId = Fn.importValue(
+    const primaryDistributionId = Fn.importValue(
       PipelineExportNames.PRIMARY_DISTRIBUTION_ID
     );
 
     // use step function to avoid over-writing primary distribution configuration with old configuration
     // and update primary distribution to attach deployment policy id.
-    let updateStep = new UpdateDistributionPipelineStep(
+    const updateStep = new UpdateDistributionPipelineStep(
       primaryDistributionId,
       stepFunctionName,
       props.env,
       stageDistribution.stagingDeploymentPolicyOutput
     );
-    let manualStep = new ManualApprovalStep(
+    const manualStep = new ManualApprovalStep(
       "Approve-Promote-StagingDistribution",
       {
         comment:

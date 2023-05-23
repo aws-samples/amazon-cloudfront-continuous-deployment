@@ -17,7 +17,7 @@ export class StagingDistributionStage extends cdk.Stage {
     props?: cdk.StageProps
   ) {
     super(scope, id, props);
-    let stagingDistributionStack = new StagingDistributionStack(
+    const stagingDistributionStack = new StagingDistributionStack(
       this,
       "cf-distribution-stack",
       stackProps

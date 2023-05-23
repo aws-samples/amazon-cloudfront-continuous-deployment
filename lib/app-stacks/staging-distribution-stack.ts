@@ -24,7 +24,7 @@ export class StagingDistributionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    let staticContentStack = new StaticContentStack(
+    const staticContentStack = new StaticContentStack(
       this,
       "static-content-stack",
       props
@@ -33,19 +33,19 @@ export class StagingDistributionStack extends cdk.Stack {
     const s3BucketName = staticContentStack.bucketName;
 
     const originAccessControlId = this.createOriginAccessControl().attrId;
-    let stagimgDistribution = this.createCfDistribution(
+    const stagingDistribution = this.createCfDistribution(
       "mystagingdistribution",
       s3BucketName,
       bucketDomainName,
       originAccessControlId
     );
-    let deploymentPolicy = this.createDeploymentPolicy(
-      stagimgDistribution.attrDomainName
+    const deploymentPolicy = this.createDeploymentPolicy(
+      stagingDistribution.attrDomainName
     );
 
     const outputName = PipelineExportNames.STAGING_DISTRIBUTION_ID;
     this.distributionIdOutput = new cdk.CfnOutput(this, outputName, {
-      value: stagimgDistribution.attrId,
+      value: stagingDistribution.attrId,
       exportName: outputName,
     });
 
@@ -58,7 +58,7 @@ export class StagingDistributionStack extends cdk.Stack {
       PipelineExportNames.PRIMARY_DISTRIBUTION_ID
     );
 
-    let stepFunctionRoleArn = Fn.importValue(
+    const stepFunctionRoleArn = Fn.importValue(
       PipelineExportNames.STEP_FUNCTION_ROLE_ARN
     );
 
@@ -70,7 +70,7 @@ export class StagingDistributionStack extends cdk.Stack {
         primaryDistributionId: primaryDistributionId,
         bucketDomainName: bucketDomainName,
         continuousDeployment: {
-          stagingDistributionId: stagimgDistribution.attrId,
+          stagingDistributionId: stagingDistribution.attrId,
           deploymentPolicyId: deploymentPolicy.attrId,
           stepFunctionRoleArn: stepFunctionRoleArn,
         },
@@ -111,9 +111,9 @@ export class StagingDistributionStack extends cdk.Stack {
     stagingDistributionDnsName: string
   ): CfnContinuousDeploymentPolicy {
     // swith the below flag to false to switch to a weight based traffic configuration
-    let headerPolicy = PipelineInputVariables.HEADER_BASED_TRAFFIC_CONFIG;
+    const headerPolicy = PipelineInputVariables.HEADER_BASED_TRAFFIC_CONFIG;
 
-    let tafficConfig = headerPolicy
+    const tafficConfig = headerPolicy
       ? this.createHeaderBasedTrafficConfiguration()
       : this.createWeightBasedTrafficConfiguration();
 

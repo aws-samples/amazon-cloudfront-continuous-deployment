@@ -21,7 +21,7 @@ export class PrimaryDistributionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    let staticContentStack = new StaticContentStack(
+    const staticContentStack = new StaticContentStack(
       this,
       "static-content-stack",
       props
@@ -32,15 +32,11 @@ export class PrimaryDistributionStack extends cdk.Stack {
 
     const originAccessControlId = this.createOriginAccessControl().attrId;
 
-    let deploymentPolicyId = "";
-    let stagingDistrbutionId = "";
-
-    let primaryDistribution = this.createCfDistribution(
+    const primaryDistribution = this.createCfDistribution(
       "mydistribution",
       s3BucketName,
       bucketDomainName,
-      originAccessControlId,
-      deploymentPolicyId
+      originAccessControlId
     );
 
     const outputName = PipelineExportNames.PRIMARY_DISTRIBUTION_ID;
@@ -72,10 +68,9 @@ export class PrimaryDistributionStack extends cdk.Stack {
     distributionName: string,
     s3BucketName: string,
     bucketDomainName: string,
-    originAccessControlId: string,
-    continuousDeploymentPolicyId: any
+    originAccessControlId: string
   ): CfnDistribution {
-    let configuration = new CfDistributionConfiguration({
+    const configuration = new CfDistributionConfiguration({
       distributionName: distributionName,
       bucketName: s3BucketName,
       bucketDomainName: bucketDomainName,

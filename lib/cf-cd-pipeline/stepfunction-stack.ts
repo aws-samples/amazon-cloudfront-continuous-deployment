@@ -31,13 +31,11 @@ export class StepFunctionStack extends cdk.NestedStack {
       "CloudFrontPromotion-StepFunction-LogGroup"
     );
 
-    let stateMachineRole = new Role(this, "StepFunctionRole", {
+    const stateMachineRole = new Role(this, "StepFunctionRole", {
       assumedBy: new ServicePrincipal("states.amazonaws.com"),
       description: "CloudFront Continuous Deployment StepFunction Role",
       inlinePolicies: {
-        "Allow-LogGroup-Permissions": this.createLogGroupPolicy(
-          logGroup.logGroupArn
-        ),
+        "Allow-LogGroup-Permissions": this.createLogGroupPolicy()
       },
     });
 
@@ -85,7 +83,7 @@ export class StepFunctionStack extends cdk.NestedStack {
     );
   }
 
-  createLogGroupPolicy(logGroupArn: string): cdk.aws_iam.PolicyDocument {
+  createLogGroupPolicy(): cdk.aws_iam.PolicyDocument {
     return new PolicyDocument({
       statements: [
         new PolicyStatement({

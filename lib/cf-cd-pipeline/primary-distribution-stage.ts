@@ -16,7 +16,7 @@ export class PrimaryDistributionStage extends cdk.Stage {
     props?: cdk.StageProps
   ) {
     super(scope, id, props);
-    let primaryDistributionStack = new PrimaryDistributionStack(
+    const primaryDistributionStack = new PrimaryDistributionStack(
       this,
       "cf-distribution-stack",
       env

@@ -45,8 +45,8 @@ export class PromoteDistributionPipelineStep
     stage: IStage,
     options: ProduceActionOptions
   ): CodePipelineActionFactoryResult {
-    let stepFunctionArn = `arn:aws:states:${this.env.region}:${this.env.account}:stateMachine:${this.stepFunctionName}`;
-    let stateMachine = StateMachine.fromStateMachineArn(
+    const stepFunctionArn = `arn:aws:states:${this.env.region}:${this.env.account}:stateMachine:${this.stepFunctionName}`;
+    const stateMachine = StateMachine.fromStateMachineArn(
       options.scope,
       "cf-promotion-state-machine",
       stepFunctionArn

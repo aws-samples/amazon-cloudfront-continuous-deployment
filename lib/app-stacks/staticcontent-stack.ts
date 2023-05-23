@@ -19,7 +19,7 @@ export class StaticContentStack extends cdk.NestedStack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    let loggingBucket = new Bucket(
+    const loggingBucket = new Bucket(
       this,
       PipelineInputVariables.LOG_BUCKET_NAME,
       {
@@ -30,7 +30,7 @@ export class StaticContentStack extends cdk.NestedStack {
       }
     );
 
-    let targetBucket = new Bucket(this, "mysite-content", {
+    const targetBucket = new Bucket(this, "mysite-content", {
       blockPublicAccess: cdk.aws_s3.BlockPublicAccess.BLOCK_ALL,
       encryption: cdk.aws_s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,

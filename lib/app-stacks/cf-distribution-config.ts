@@ -1,11 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
+import { CfnDistribution } from "aws-cdk-lib/aws-cloudfront";
 import { CfManagedPolicies } from "./cf-managed-policy-constants";
 
 // separating distribution config from distribution simplifies switching between continous deployment vs. direct deployment
 export class CfDistributionConfiguration {
-  private _configuration: any;
+  private _configuration: CfnDistribution.DistributionConfigProperty;
 
   constructor(config: CfDistributionConfiguration.CfConfigInput) {
     this._configuration = {
@@ -33,7 +34,7 @@ export class CfDistributionConfiguration {
       defaultRootObject: "index.html",
     };
   }
-  public get configuration(): any {
+  public get configuration(): CfnDistribution.DistributionConfigProperty {
     return this._configuration;
   }
 }
@@ -46,4 +47,5 @@ export declare namespace CfDistributionConfiguration {
     originAccessControlId: string;
     staging: boolean;
   }
+  
 }
