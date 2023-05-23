@@ -7,7 +7,7 @@ import {
   CodePipeline,
   CodePipelineSource,
   ManualApprovalStep,
-  ShellStep
+  ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { Repository } from "aws-cdk-lib/aws-codecommit";
 import { CfnBucket } from "aws-cdk-lib/aws-s3";
@@ -95,15 +95,21 @@ export class PipelineStack extends cdk.Stack {
   private getCodePipelineSource(): cdk.pipelines.IFileSetProducer | undefined {
     // using CodeCommit repository, but can easily switched to github or S3
     // Please refer to CodePipelineSource documentation for using different repository
-    return CodePipelineSource.codeCommit(Repository.fromRepositoryName(
-      this,
-      "CD-Pipeline-Repository",
-      PipelineInputVariables.PIPELINE_CODE_REPO
-    ), PipelineInputVariables.PIPELINE_CODE_BRANCH);
+    return CodePipelineSource.codeCommit(
+      Repository.fromRepositoryName(
+        this,
+        "CD-Pipeline-Repository",
+        PipelineInputVariables.PIPELINE_CODE_REPO
+      ),
+      PipelineInputVariables.PIPELINE_CODE_BRANCH
+    );
   }
 
-  createPrimaryDistribution(pipeline: CodePipeline, props?: StageProps, stackProps?: cdk.StackProps): void {
-
+  createPrimaryDistribution(
+    pipeline: CodePipeline,
+    props?: StageProps,
+    stackProps?: cdk.StackProps
+  ): void {
     let primaryDistribution = new PrimaryDistributionStage(
       this,
       "PrimaryDistribution-Change",
@@ -124,16 +130,15 @@ export class PipelineStack extends cdk.Stack {
     );
   }
 
- 
-
   createContinuousDeployment(
     pipeline: CodePipeline,
     stepFunctionName: string,
     props?: cdk.StackProps
   ): void {
-
     if (!props || !props.env) {
-      throw Error("Account and Region are required if continuous deployment is enabled. Please uncomment or pass env in file cf-cd-sample-app.ts")
+      throw Error(
+        "Account and Region are required if continuous deployment is enabled. Please uncomment or pass env in file cf-cd-sample-app.ts"
+      );
     }
 
     let stageDistribution = new StagingDistributionStage(
@@ -181,7 +186,7 @@ export class PipelineStack extends cdk.Stack {
       );
   }
 
-    addAspect(construct: Construct): void {
+  addAspect(construct: Construct): void {
     Aspects.of(construct).add(
       new AwsSolutionsChecks({
         verbose: true,

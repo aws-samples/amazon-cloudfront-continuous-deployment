@@ -2,24 +2,22 @@
 // SPDX-License-Identifier: MIT-0
 
 import * as cdk from "aws-cdk-lib";
-import { CfnOutput, Fn } from "aws-cdk-lib";
+import { CfnOutput } from "aws-cdk-lib";
 import {
   PolicyDocument,
   PolicyStatement,
   Role,
   ServicePrincipal,
 } from "aws-cdk-lib/aws-iam";
-import {
-  CfnStateMachine
-} from "aws-cdk-lib/aws-stepfunctions";
+import { CfnStateMachine } from "aws-cdk-lib/aws-stepfunctions";
 import { NagSuppressions } from "cdk-nag";
 import { Construct } from "constructs";
-import fs = require("fs");
-import path = require("path");
 import {
   PipelineExportNames,
   PipelineInputVariables,
 } from "../pipeline-input-variables";
+import fs = require("fs");
+import path = require("path");
 
 export class StepFunctionStack extends cdk.NestedStack {
   stepFunctionName: string;

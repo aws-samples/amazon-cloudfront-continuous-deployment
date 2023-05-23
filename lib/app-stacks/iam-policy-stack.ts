@@ -12,7 +12,6 @@ import {
 } from "aws-cdk-lib/aws-iam";
 import { CfnBucketPolicy } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PipelineInputVariables } from "../pipeline-input-variables";
 
 // grant required permissions to distribution to read origin bucket and for stepfunction to update distributions
 export class IamPolicyStack extends cdk.NestedStack {
@@ -20,7 +19,7 @@ export class IamPolicyStack extends cdk.NestedStack {
     scope: Construct,
     id: string,
     input: IamPolicyStack.IamPolicyInput,
-    props?: cdk.StackProps,
+    props?: cdk.StackProps
   ) {
     super(scope, id, props);
 

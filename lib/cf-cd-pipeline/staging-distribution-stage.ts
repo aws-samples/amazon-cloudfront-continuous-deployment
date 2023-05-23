@@ -6,7 +6,6 @@ import { Construct } from "constructs";
 import { StackProps } from "aws-cdk-lib";
 import { StagingDistributionStack } from "../app-stacks/staging-distribution-stack";
 
-
 export class StagingDistributionStage extends cdk.Stage {
   stagingDistributionOutput: cdk.CfnOutput;
   stagingDeploymentPolicyOutput: cdk.CfnOutput;

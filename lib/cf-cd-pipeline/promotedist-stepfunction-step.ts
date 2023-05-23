@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
-import { CfnOutput, Environment, Fn } from "aws-cdk-lib";
+import { CfnOutput, Environment } from "aws-cdk-lib";
 import {
   StateMachineInput,
   StepFunctionInvokeAction,
@@ -15,7 +15,6 @@ import {
   StackOutputReference,
   Step,
 } from "aws-cdk-lib/pipelines";
-import { PipelineInputVariables } from "../pipeline-input-variables";
 
 export class PromoteDistributionPipelineStep
   extends Step
@@ -61,7 +60,7 @@ export class PromoteDistributionPipelineStep
           Id: this.primaryDistributionId,
           StagingDistributionId: options.stackOutputsMap.toCodePipeline(
             this.stagingDistrbutionId
-          )
+          ),
         }),
         runOrder: 1,
       })

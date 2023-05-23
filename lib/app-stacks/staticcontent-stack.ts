@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: MIT-0
 
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
-import { Bucket, CfnBucketPolicy } from "aws-cdk-lib/aws-s3";
-import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import {
   PolicyDocument,
   PolicyStatement,
   ServicePrincipal,
 } from "aws-cdk-lib/aws-iam";
+import { Bucket, CfnBucketPolicy } from "aws-cdk-lib/aws-s3";
+import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
+import { Construct } from "constructs";
 import { PipelineInputVariables } from "../pipeline-input-variables";
 
 export class StaticContentStack extends cdk.NestedStack {

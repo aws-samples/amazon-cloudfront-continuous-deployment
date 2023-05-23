@@ -62,18 +62,21 @@ export class StagingDistributionStack extends cdk.Stack {
       PipelineExportNames.STEP_FUNCTION_ROLE_ARN
     );
 
-    new IamPolicyStack(this, "distribution-iam-policies",  {
-      bucketName: s3BucketName,
-      primaryDistributionId: primaryDistributionId,
-      bucketDomainName: bucketDomainName,
-      continuousDeployment: {
-        stagingDistributionId: stagimgDistribution.attrId,
-        deploymentPolicyId: deploymentPolicy.attrId,
-        stepFunctionRoleArn: stepFunctionRoleArn,
-      }
-   
-    }, 
-    props);
+    new IamPolicyStack(
+      this,
+      "distribution-iam-policies",
+      {
+        bucketName: s3BucketName,
+        primaryDistributionId: primaryDistributionId,
+        bucketDomainName: bucketDomainName,
+        continuousDeployment: {
+          stagingDistributionId: stagimgDistribution.attrId,
+          deploymentPolicyId: deploymentPolicy.attrId,
+          stepFunctionRoleArn: stepFunctionRoleArn,
+        },
+      },
+      props
+    );
   }
 
   createCfDistribution(

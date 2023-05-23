@@ -2,18 +2,17 @@
 // SPDX-License-Identifier: MIT-0
 
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
 import {
   CfnDistribution,
   CfnOriginAccessControl,
 } from "aws-cdk-lib/aws-cloudfront";
-import { CfDistributionConfiguration } from "./cf-distribution-config";
-import { StaticContentStack } from "./staticcontent-stack";
-import { IamPolicyStack } from "./iam-policy-stack";
+import { Construct } from "constructs";
 import {
-  PipelineExportNames,
-  PipelineInputVariables,
+  PipelineExportNames
 } from "../pipeline-input-variables";
+import { CfDistributionConfiguration } from "./cf-distribution-config";
+import { IamPolicyStack } from "./iam-policy-stack";
+import { StaticContentStack } from "./staticcontent-stack";
 
 export class PrimaryDistributionStack extends cdk.Stack {
   distributionIdOutput: cdk.CfnOutput;
@@ -57,12 +56,16 @@ export class PrimaryDistributionStack extends cdk.Stack {
       { value: primaryDistribution.attrDomainName }
     );
 
-    new IamPolicyStack(this, "distribution-iam-policies", {
-      bucketName: s3BucketName,
-      primaryDistributionId: primaryDistribution.attrId,
-      bucketDomainName: bucketDomainName,
-    }, 
-    props);
+    new IamPolicyStack(
+      this,
+      "distribution-iam-policies",
+      {
+        bucketName: s3BucketName,
+        primaryDistributionId: primaryDistribution.attrId,
+        bucketDomainName: bucketDomainName,
+      },
+      props
+    );
   }
 
   createCfDistribution(
