@@ -5,7 +5,7 @@ Repository hosting sample AWS CDK Pipeline for deploying changes Amazon CloudFro
 ----
 ## Architecture Diagram
 
-![Architecture Diagram](/cloudfront-cd.jpg)*Continuous Delivery of CloudFront Distribution Configuration Changes*
+![Architecture Diagram](/cloudfront-cd.png)*Continuous Delivery of CloudFront Distribution Configuration Changes*
 
 ----
 
@@ -24,9 +24,11 @@ The following sections contain steps A through D with instructions to create a d
 1. Clone this repository to make changes and commit to your code repository
 1. Update the repository settings by editing `lib/pipeline-input-variable.ts` change the value of `PIPELINE_CODE_REPO_NAME` variable to point to your code repository name
 1. Add environment (account and region) by editing `bin/cf-cd-sample-app.ts` follow comments in the file to uncomment and edit the right environment entry
+1. Bootstrap CDK using command `cdk bootstrap` if not already done
 1. Update/customize the other variables per applicable naming standards
 1. Update the git remote to point to code repository by running `git remote set-url origin <replace-with-your-repository-URL>`
 1. Commit your changes to code repository
+1. Run command `npm install` to install dependencies
 1. Run the command `cdk deploy` to deploy the pipeline
 
 > Executing instructions listed above creates a AWS CodePipeline and runs the pipeline. Running the pipeline will result in creating An Amazon CloudFront Distribution with S3 Origin.      
