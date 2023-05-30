@@ -31,7 +31,7 @@ The following sections contain steps A through D with instructions to create a d
 1. Run command `npm install` to install dependencies
 1. Run the command `cdk deploy` to deploy the pipeline
 
-> Executing instructions listed above creates a AWS CodePipeline and runs the pipeline. Running the pipeline will result in creating An Amazon CloudFront Distribution with S3 Origin.      
+> Executing instructions listed above creates a AWS CodePipeline and runs the pipeline. Running the pipeline will result in creating a Amazon CloudFront Distribution with S3 Origin.      
 
 ----
 #### Step - B: Validate the Pipeline and Test Distribution
