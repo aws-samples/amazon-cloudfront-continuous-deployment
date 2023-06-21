@@ -22,7 +22,7 @@ The following sections contain steps A through D with instructions to create a d
 
 #### Step - A: Setup Repository and Deploy Pipeline
 1. Clone this repository to make changes and commit to your code repository
-1. Update the repository settings by editing `lib/pipeline-input-variable.ts` change the value of `PIPELINE_CODE_REPO_NAME` variable to point to your code repository name
+1. Update the repository settings by editing `lib/pipeline-input-variables.ts` change the value of `PIPELINE_CODE_REPO` variable to point to your code repository name
 1. Add environment (account and region) by editing `bin/cf-cd-sample-app.ts` follow comments in the file to uncomment and edit the right environment entry
 1. Bootstrap CDK using command `cdk bootstrap` if not already done
 1. Update/customize the other variables per applicable naming standards
@@ -42,7 +42,7 @@ The following sections contain steps A through D with instructions to create a d
 
 #### Step - C: Change Distribution Configuration and Deploy 
 
-1. Make distribution configuration updates by editing `lib/app-stacks/cf-distribution.config.ts` file 
+1. Make distribution configuration updates by editing `lib/app-stacks/cf-distribution-config.ts` file 
 1. Enable continuous deployment by edit `pipeline-input-variables.ts` file to update `ENABLE_CONTINUOUS_DEPLOYMENT` to true
 1. commit code changes to repository
 
@@ -67,7 +67,7 @@ Follow below instructions if you want to remove the Pipeline and stacks created 
 
 #### Delete Staging Distribution Stack
 1. Once deployment policy is removed, we will need to deploy primary distribution before we can delete staging distribution stack by disabling continuous deployment and running the pipeline
-1. Disable continuous deployment by editing pipeline-input-variable.ts and setting ENABLE_CONTINUOUS_DEPLOYMENT to false
+1. Disable continuous deployment by editing `pipeline-input-variables.ts` and setting `ENABLE_CONTINUOUS_DEPLOYMENT` to false
 1. Commit the change to repository
 1. Commit to repository will trigger the pipeline to deploy latest changes to primary distribution
 1. Once the primary distribution is deployed, you can delete the staging distribution stack by running below command in through AWS CLI or from CloudFormation console
