@@ -2,12 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 import * as cdk from "aws-cdk-lib";
-import {
-  PolicyDocument,
-  PolicyStatement,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
-import { Bucket, CfnBucketPolicy } from "aws-cdk-lib/aws-s3";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 import { PipelineInputVariables } from "../pipeline-input-variables";
@@ -47,40 +42,9 @@ export class StaticContentStack extends cdk.NestedStack {
 
     this.bucketName = targetBucket.bucketName;
     this.bucketDomainName = targetBucket.bucketDomainName;
-
-    this.attachS3LogsWritePolicy(loggingBucket.bucketName, this.bucketName);
   }
 
   createCfnOutput(name: string, value: string): void {
     new cdk.CfnOutput(this, name, { value: value, exportName: name });
-  }
-
-  attachS3LogsWritePolicy(
-    logBucketName: string,
-    sourceBucketName: string
-  ): void {
-    const sourceArn = `arn:aws:s3:::${sourceBucketName}`;
-    const logBucketResource = `arn:aws:s3:::${logBucketName}/*`;
-
-    const policyDocument = new PolicyDocument({
-      statements: [
-        new PolicyStatement({
-          actions: ["s3:PutObject"],
-          principals: [new ServicePrincipal("logging.s3.amazonaws.com")],
-          resources: [logBucketResource],
-          conditions: {
-            ArnLike: { "aws:SourceArn": sourceArn },
-            StringEquals: {
-              "aws:SourceAccount": this.account,
-            },
-          },
-        }),
-      ],
-    });
-
-    new CfnBucketPolicy(this, "allow-access-logs-from-mysite", {
-      bucket: logBucketName,
-      policyDocument: policyDocument,
-    });
   }
 }
